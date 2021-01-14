@@ -343,6 +343,9 @@ def get_context(context):
 			frappe.throw(_('Mandatory Information missing:') + '<br><br>'
 				+ '<br>'.join(['{0} ({1})'.format(d.label, d.fieldtype) for d in missing]))
 
+	def allow_website_search_indexing(self):
+		return False
+
 	def has_web_form_permission(self, doctype, name, ptype='read'):
 		if frappe.session.user=="Guest":
 			return False
@@ -362,7 +365,6 @@ def get_context(context):
 
 		else:
 			return False
-
 
 
 @frappe.whitelist(allow_guest=True)
@@ -455,7 +457,7 @@ def accept(web_form, data, docname=None, for_payment=False):
 	if files_to_delete:
 		for f in files_to_delete:
 			if f:
-				remove_file_by_url(doc.get(fieldname), doctype=doc.doctype, name=doc.name)
+				remove_file_by_url(f, doctype=doc.doctype, name=doc.name)
 
 
 	frappe.flags.web_form_doc = doc
